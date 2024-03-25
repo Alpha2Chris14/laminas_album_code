@@ -7,6 +7,10 @@ use Album\Model\AlbumTable;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
+// Add the following import statements at the top of the file:
+use Album\Form\AlbumForm;
+use Album\Model\Album;
+
 class AlbumController extends AbstractActionController
 {
      // Add this property:
@@ -26,9 +30,29 @@ class AlbumController extends AbstractActionController
         ]);
     }
 
+    /* Update the following method to read as follows: */
     public function addAction()
     {
-        return new ViewModel();
+        $form = new AlbumForm();
+        $form->get('submit')->setValue('Add');
+
+        $request = $this->getRequest();
+
+        if (! $request->isPost()) {
+            return ['form' => $form];
+        }
+
+        $album = new Album();
+        $form->setInputFilter($album->getInputFilter());
+        $form->setData($request->getPost());
+
+        if (! $form->isValid()) {
+            return ['form' => $form];
+        }
+
+        $album->exchangeArray($form->getData());
+        $this->table->saveAlbum($album);
+        return $this->redirect()->toRoute('album');
     }
 
     public function editAction()
