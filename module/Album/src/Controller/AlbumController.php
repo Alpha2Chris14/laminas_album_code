@@ -66,6 +66,7 @@ class AlbumController extends AbstractActionController
         // Retrieve the album with the specified id. Doing so raises
         // an exception if the album is not found, which should result
         // in redirecting to the landing page.
+        // just a comment
         try {
             $album = $this->table->getAlbum($id);
         } catch (\Exception $e) {
